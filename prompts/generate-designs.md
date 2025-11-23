@@ -10,6 +10,7 @@ Interpret this patent drawing as a design brief, not a literal blueprint. Create
 DESIGN INTERPRETATION GUIDELINES:
 
 Geometry & Proportions:
+- Make sure the product image is shown rightside up even if the drawing is rotated 90 or 180 degrees
 - Preserve core functional elements and overall form language from the drawing
 - Refine proportions for visual balance and ergonomics (patent drawings often have exaggerated or clunky dimensions)
 - Smooth transitions between surfaces; eliminate technical drawing artifacts

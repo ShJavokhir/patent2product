@@ -6,7 +6,7 @@ import { useFutureMode } from '@/lib/FutureModeContext'
 import { Command, Sparkles, Moon, Sun } from 'lucide-react'
 
 const COMMANDS = [
-  { id: 'future-mode', label: 'Future Mode', description: 'Explore未来patents for未来products', icon: Sparkles },
+  { id: 'future-mode', label: 'Future Mode', description: 'See future inventions', icon: Sparkles },
 ]
 
 export function CommandBar() {
