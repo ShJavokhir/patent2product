@@ -10,13 +10,13 @@
   --radius-ios-lg: 32px;
   --radius-ios-xl: 40px;
 
-  /* Glass morphism colors */
-  --color-glass-100: rgba(255, 255, 255, 0.03);
-  --color-glass-200: rgba(255, 255, 255, 0.08);
-  --color-glass-300: rgba(255, 255, 255, 0.12);
-  --color-glass-border: rgba(255, 255, 255, 0.08);
-  --color-glass-text: rgba(255, 255, 255, 0.9);
-  --color-glass-muted: rgba(255, 255, 255, 0.5);
+  /* Glass morphism colors - Light Theme */
+  --color-glass-100: rgba(255, 255, 255, 0.4);
+  --color-glass-200: rgba(255, 255, 255, 0.6);
+  --color-glass-300: rgba(255, 255, 255, 0.8);
+  --color-glass-border: rgba(16, 185, 129, 0.1);
+  --color-glass-text: #0f172a;
+  --color-glass-muted: #64748b;
 
   /* Brand colors */
   --color-brand-primary: #10b981;
@@ -26,6 +26,23 @@
   /* Animations */
   --animate-gradient-xy: gradient-xy 15s ease infinite;
   --animate-fade-in: fadeIn 0.5s ease-out forwards;
+
+  /* Shadcn Colors */
+  --color-border: hsl(var(--border));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+}
+
+:root {
+  --background: #f0fdf4;
+  --foreground: #0f172a;
+  --primary: #10b981;
+  --primary-foreground: #ffffff;
+  
+  /* Shadcn Variables (HSL) */
+  --border: 214.3 31.8% 91.4%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
 }
 
 @keyframes gradient-xy {
@@ -51,8 +68,8 @@
 }
 
 body {
-  background-color: #020617;
-  color: white;
+  background-color: #f0fdf4; /* emerald-50 */
+  color: #0f172a; /* slate-900 */
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -64,16 +81,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #94a3b8;
 }
 
 /* Utility classes for iOS radius */

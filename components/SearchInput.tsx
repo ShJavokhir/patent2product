@@ -37,9 +37,9 @@ const SearchInput: React.FC<SearchInputProps> = ({
       `}></div>
 
       <div className={`
-        relative flex items-center bg-black/40 backdrop-blur-xl border transition-all duration-300
+        relative flex items-center bg-white/70 backdrop-blur-xl border transition-all duration-300
         ${large ? 'rounded-2xl py-1.5' : 'rounded-xl py-1'}
-        border-white/10 group-focus-within:border-emerald-500/30 group-focus-within:bg-black/60 group-focus-within:shadow-2xl
+        border-emerald-900/10 group-focus-within:border-emerald-500/30 group-focus-within:bg-white group-focus-within:shadow-2xl
       `}>
         <input
           type="text"
@@ -48,7 +48,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className={`
-            w-full bg-transparent text-white placeholder-gray-500 focus:outline-none
+            w-full bg-transparent text-slate-900 placeholder-slate-500 focus:outline-none
             ${large ? 'py-4 pl-6 pr-16 text-lg' : 'py-2 pl-4 pr-12 text-sm'}
             font-light tracking-wide
           `}
@@ -59,11 +59,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
           className={`
             absolute top-1/2 -translate-y-1/2
             flex items-center justify-center
-            text-emerald-400
+            text-emerald-600
             transition-all duration-200
             active:scale-95
             disabled:opacity-50 disabled:cursor-not-allowed
-            hover:text-emerald-300 hover:bg-emerald-500/10
+            hover:text-emerald-500 hover:bg-emerald-500/10
             ${large ? 'right-2 w-10 h-10 rounded-xl' : 'right-1 w-8 h-8 rounded-lg'}
           `}
         >

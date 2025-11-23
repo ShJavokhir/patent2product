@@ -75,13 +75,13 @@ function ResultsContent() {
         <div className="flex items-center gap-6">
             <button
                 onClick={() => router.back()}
-                className="group w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all active:scale-90"
+                className="group w-12 h-12 flex items-center justify-center rounded-full bg-white/50 border border-slate-200 hover:bg-white hover:border-slate-300 transition-all active:scale-90 shadow-sm"
             >
-                <ArrowLeft className="w-5 h-5 text-gray-300 group-hover:text-white" />
+                <ArrowLeft className="w-5 h-5 text-slate-400 group-hover:text-slate-900" />
             </button>
             <div>
-                <h2 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Results for</h2>
-                <h1 className="text-3xl md:text-4xl font-display font-bold text-white tracking-tight">&quot;{query}&quot;</h1>
+                <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Results for</h2>
+                <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 tracking-tight">&quot;{query}&quot;</h1>
             </div>
         </div>
         <div className="w-full lg:w-1/2">
@@ -98,14 +98,14 @@ function ResultsContent() {
       {status === LoadingState.LOADING ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
-                <div key={i} className="h-96 rounded-ios-lg bg-white/5 animate-pulse border border-white/5"></div>
+                <div key={i} className="h-96 rounded-ios-lg bg-slate-200/50 animate-pulse border border-slate-200"></div>
             ))}
         </div>
       ) : status === LoadingState.ERROR ? (
-        <div className="text-center py-20 bg-red-900/10 border border-red-500/20 rounded-ios-lg backdrop-blur-sm">
-            <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-red-200 mb-2">Something went wrong</h3>
-            <p className="text-red-300/70 mb-6">We couldn&apos;t reach the intelligence engine. Showing cached examples.</p>
+        <div className="text-center py-20 bg-red-50 border border-red-200 rounded-ios-lg backdrop-blur-sm">
+            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-red-900 mb-2">Something went wrong</h3>
+            <p className="text-red-700 mb-6">We couldn&apos;t reach the intelligence engine. Showing cached examples.</p>
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left p-6">
                 {results.map(patent => (
                     <PatentCard key={patent.id} patent={patent} />
@@ -121,7 +121,7 @@ function ResultsContent() {
             </div>
 
             {results.length === 0 && (
-                <div className="text-center py-24 text-gray-500">
+                <div className="text-center py-24 text-slate-500">
                     <RefreshCw className="w-10 h-10 mx-auto mb-4 opacity-30" />
                     <p className="text-lg">No patents found. Try a different term.</p>
                 </div>
@@ -138,18 +138,18 @@ export default function Results() {
       <div className="min-h-screen pt-28 pb-12 px-4 md:px-8 max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-8 lg:items-center justify-between mb-16 animate-fade-in">
           <div className="flex items-center gap-6">
-            <button className="group w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/5">
-              <ArrowLeft className="w-5 h-5 text-gray-300" />
+            <button className="group w-12 h-12 flex items-center justify-center rounded-full bg-white/50 border border-slate-200 shadow-sm">
+              <ArrowLeft className="w-5 h-5 text-slate-400" />
             </button>
             <div>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Loading</h2>
-              <h1 className="text-3xl md:text-4xl font-display font-bold text-white tracking-tight">Results...</h1>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Loading</h2>
+              <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 tracking-tight">Results...</h1>
             </div>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-96 rounded-ios-lg bg-white/5 animate-pulse border border-white/5"></div>
+            <div key={i} className="h-96 rounded-ios-lg bg-slate-200/50 animate-pulse border border-slate-200"></div>
           ))}
         </div>
       </div>
