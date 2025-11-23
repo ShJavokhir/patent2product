@@ -1,26 +1,129 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter), var(--font-geist-sans), sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono);
+
+  /* Custom iOS-inspired border radius */
+  --radius-ios: 24px;
+  --radius-ios-lg: 32px;
+  --radius-ios-xl: 40px;
+
+  /* Glass morphism colors */
+  --color-glass-100: rgba(255, 255, 255, 0.03);
+  --color-glass-200: rgba(255, 255, 255, 0.08);
+  --color-glass-300: rgba(255, 255, 255, 0.12);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+  --color-glass-text: rgba(255, 255, 255, 0.9);
+  --color-glass-muted: rgba(255, 255, 255, 0.5);
+
+  /* Brand colors */
+  --color-brand-primary: #10b981;
+  --color-brand-secondary: #14b8a6;
+  --color-brand-accent: #22c55e;
+
+  /* Animations */
+  --animate-gradient-xy: gradient-xy 15s ease infinite;
+  --animate-fade-in: fadeIn 0.5s ease-out forwards;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes gradient-xy {
+  0%, 100% {
+    background-size: 400% 400%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #020617;
+  color: white;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Utility classes for iOS radius */
+.rounded-ios {
+  border-radius: var(--radius-ios);
+}
+
+.rounded-ios-lg {
+  border-radius: var(--radius-ios-lg);
+}
+
+.rounded-ios-xl {
+  border-radius: var(--radius-ios-xl);
+}
+
+/* Utility classes for glass colors */
+.bg-glass-100 {
+  background-color: var(--color-glass-100);
+}
+
+.bg-glass-200 {
+  background-color: var(--color-glass-200);
+}
+
+.bg-glass-300 {
+  background-color: var(--color-glass-300);
+}
+
+.border-glass {
+  border-color: var(--color-glass-border);
+}
+
+.text-glass {
+  color: var(--color-glass-text);
+}
+
+.text-glass-muted {
+  color: var(--color-glass-muted);
+}
+
+/* Utility class for display font */
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Animation utilities */
+.animate-gradient-xy {
+  animation: var(--animate-gradient-xy);
+}
+
+.animate-fade-in {
+  animation: var(--animate-fade-in);
 }
