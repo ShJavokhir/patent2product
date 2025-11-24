@@ -23,9 +23,21 @@
   --color-brand-secondary: #14b8a6;
   --color-brand-accent: #22c55e;
 
+  /* Tron/Future Colors */
+  --color-tron-bg: #050508;
+  --color-tron-cyan: #00f3ff;
+  --color-tron-blue: #0088ff;
+  --color-tron-purple: #bc13fe;
+  --color-tron-orange: #ff9e00;
+  --color-tron-grid: rgba(0, 243, 255, 0.15);
+
   /* Animations */
   --animate-gradient-xy: gradient-xy 15s ease infinite;
   --animate-fade-in: fadeIn 0.5s ease-out forwards;
+  --animate-scanline: scanline 8s linear infinite;
+  --animate-grid-move: grid-move 20s linear infinite;
+  --animate-pulse-fast: pulse-fast 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
 
   /* Shadcn Colors */
   --color-border: hsl(var(--border));
@@ -71,58 +83,93 @@
 @keyframes scanline {
   0% {
     transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
   }
   100% {
     transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+@keyframes grid-move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 40px;
+  }
+}
+
+@keyframes pulse-fast {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--color-tron-cyan), 0 0 10px var(--color-tron-cyan), inset 0 0 5px var(--color-tron-cyan);
+  }
+  50% {
+    box-shadow: 0 0 10px var(--color-tron-cyan), 0 0 20px var(--color-tron-cyan), inset 0 0 10px var(--color-tron-cyan);
   }
 }
 
 @keyframes glitch {
   0%, 100% {
     transform: translate(0);
+    clip-path: inset(0 0 0 0);
   }
   20% {
     transform: translate(-2px, 2px);
+    clip-path: inset(10% 0 85% 0);
   }
   40% {
     transform: translate(-2px, -2px);
+    clip-path: inset(40% 0 43% 0);
   }
   60% {
     transform: translate(2px, 2px);
+    clip-path: inset(80% 0 5% 0);
   }
   80% {
     transform: translate(2px, -2px);
+    clip-path: inset(15% 0 60% 0);
   }
 }
 
 @keyframes neon-pulse {
   0%, 100% {
     opacity: 1;
-    filter: drop-shadow(0 0 8px currentColor);
+    filter: drop-shadow(0 0 5px currentColor);
   }
   50% {
     opacity: 0.8;
-    filter: drop-shadow(0 0 16px currentColor);
+    filter: drop-shadow(0 0 15px currentColor);
   }
 }
 
 @keyframes hologram {
   0%, 100% {
-    opacity: 0.9;
-    background-position: 0% 0%;
+    opacity: 0.05;
   }
   50% {
-    opacity: 1;
-    background-position: 100% 100%;
+    opacity: 0.1;
   }
 }
 
 @keyframes cyber-grid {
   0% {
-    background-position: 0 0, 0 0;
+    background-position: 0 0;
   }
   100% {
-    background-position: 40px 40px, 40px 40px;
+    background-position: 40px 40px;
   }
 }
 
@@ -135,19 +182,22 @@ body {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-/* Future Mode Dark Theme */
+/* Future Mode Dark Theme - TRON EDITION */
 .future-mode {
   color-scheme: dark;
 }
 
 .future-mode body {
-  background-color: #0a0a0f;
+  background-color: var(--color-tron-bg);
   color: #e2e8f0;
-  background-image:
-    linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  animation: cyber-grid 20s linear infinite;
+  /* Tron Grid Background */
+  background-image: 
+    linear-gradient(var(--color-tron-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-tron-grid) 1px, transparent 1px),
+    radial-gradient(circle at 50% 0%, rgba(0, 243, 255, 0.15) 0%, transparent 70%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+  background-position: center top;
+  animation: grid-move 2s linear infinite;
 }
 
 /* Future Mode - Scan line effect */
@@ -157,36 +207,36 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg,
-    transparent,
-    rgba(6, 182, 212, 0.8) 50%,
-    transparent
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.5) 51%
   );
+  background-size: 100% 4px;
   pointer-events: none;
   z-index: 9999;
-  animation: scanline 8s linear infinite;
-  opacity: 0.4;
+  opacity: 0.1;
 }
 
-/* Future Mode - Holographic overlay */
+/* Moving Scanline Bar */
 .future-mode::after {
   content: '';
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(6, 182, 212, 0.02) 0%,
-      transparent 50%,
-      rgba(168, 85, 247, 0.02) 100%
-    );
+  height: 10px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(0, 243, 255, 0.5) 50%,
+    transparent
+  );
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
   pointer-events: none;
   z-index: 9998;
-  animation: hologram 10s ease-in-out infinite;
+  animation: scanline 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  opacity: 0.3;
 }
 
 /* Custom Scrollbar */
@@ -209,16 +259,19 @@ body {
 
 /* Future Mode Scrollbar */
 .future-mode ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #050508;
+  border-left: 1px solid rgba(0, 243, 255, 0.1);
 }
 
 .future-mode ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #06b6d4, #8b5cf6);
-  border-radius: 4px;
+  background: var(--color-tron-cyan);
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--color-tron-cyan);
 }
 
 .future-mode ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #22d3ee, #a78bfa);
+  background: #fff;
+  box-shadow: 0 0 15px var(--color-tron-cyan);
 }
 
 /* Utility classes for iOS radius */
@@ -284,107 +337,124 @@ body {
 
 /* Future Mode Text Shadows */
 .future-mode .text-neon-cyan {
-  color: #06b6d4;
-  text-shadow: 0 0 10px rgba(6, 182, 212, 0.5),
-               0 0 20px rgba(6, 182, 212, 0.3),
-               0 0 30px rgba(6, 182, 212, 0.2);
+  color: var(--color-tron-cyan);
+  text-shadow: 0 0 5px var(--color-tron-cyan),
+               0 0 15px var(--color-tron-cyan);
 }
 
 .future-mode .text-neon-purple {
-  color: #a78bfa;
-  text-shadow: 0 0 10px rgba(167, 139, 250, 0.5),
-               0 0 20px rgba(167, 139, 250, 0.3),
-               0 0 30px rgba(167, 139, 250, 0.2);
+  color: var(--color-tron-purple);
+  text-shadow: 0 0 5px var(--color-tron-purple),
+               0 0 15px var(--color-tron-purple);
 }
 
 /* Future Mode Glow Effects */
 .future-mode .glow-cyan {
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.4),
-              0 0 40px rgba(6, 182, 212, 0.2),
-              inset 0 0 20px rgba(6, 182, 212, 0.1);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2),
+              inset 0 0 15px rgba(0, 243, 255, 0.1);
+  border-color: var(--color-tron-cyan);
 }
 
 .future-mode .glow-purple {
-  box-shadow: 0 0 20px rgba(167, 139, 250, 0.4),
-              0 0 40px rgba(167, 139, 250, 0.2),
-              inset 0 0 20px rgba(167, 139, 250, 0.1);
-}
-
-.future-mode .glow-pink {
-  box-shadow: 0 0 20px rgba(236, 72, 153, 0.4),
-              0 0 40px rgba(236, 72, 153, 0.2),
-              inset 0 0 20px rgba(236, 72, 153, 0.1);
+  box-shadow: 0 0 15px rgba(188, 19, 254, 0.2),
+              inset 0 0 15px rgba(188, 19, 254, 0.1);
+  border-color: var(--color-tron-purple);
 }
 
 /* Future Mode Robust Overrides */
 /* Automatically adapt standard Slate utilities to Future Mode dark theme */
 
 /* Text Color Inversion */
-.future-mode .text-slate-900 { color: #f8fafc !important; } /* slate-50 */
-.future-mode .text-slate-800 { color: #f1f5f9 !important; } /* slate-100 */
-.future-mode .text-slate-700 { color: #e2e8f0 !important; } /* slate-200 */
-.future-mode .text-slate-600 { color: #cbd5e1 !important; } /* slate-300 */
-.future-mode .text-slate-500 { color: #94a3b8 !important; } /* slate-400 */
-.future-mode .text-slate-400 { color: #64748b !important; } /* slate-500 */
-.future-mode .text-slate-300 { color: #475569 !important; } /* slate-600 - for very muted text */
+.future-mode .text-slate-900 { color: #ffffff !important; text-shadow: 0 0 2px rgba(255, 255, 255, 0.5); }
+.future-mode .text-slate-800 { color: #e2e8f0 !important; }
+.future-mode .text-slate-700 { color: #cbd5e1 !important; }
+.future-mode .text-slate-600 { color: #94a3b8 !important; }
+.future-mode .text-slate-500 { color: #64748b !important; }
+.future-mode .text-slate-400 { color: #475569 !important; }
 
 /* Background Color Adaptation */
-.future-mode .bg-slate-50  { background-color: rgba(2, 6, 23, 0.5); }
+.future-mode .bg-slate-50  { background-color: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.2); }
 .future-mode .bg-slate-100 { 
-  background-color: rgba(30, 41, 59, 0.4); 
-  border-color: rgba(148, 163, 184, 0.1);
+  background-color: rgba(5, 5, 8, 0.8); 
+  border-color: rgba(0, 243, 255, 0.2);
+  box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.05);
 }
-.future-mode .bg-slate-200 { background-color: rgba(51, 65, 85, 0.5); }
+.future-mode .bg-slate-200 { background-color: rgba(0, 243, 255, 0.1); }
 
 /* Border Adaptation */
-.future-mode .border-slate-200 { border-color: rgba(148, 163, 184, 0.15); }
-.future-mode .border-slate-300 { border-color: rgba(148, 163, 184, 0.3); }
+.future-mode .border-slate-200 { border-color: rgba(0, 243, 255, 0.3); }
+.future-mode .border-slate-300 { border-color: rgba(0, 243, 255, 0.5); }
 
 /* Button Visibility Fixes */
 /* Make primary buttons pop in Future Mode (Cyan/Neon style) */
 .future-mode .bg-slate-900 { 
-  background-color: #06b6d4 !important; /* cyan-500 */
-  color: #0f172a !important; /* Ensure text is readable on cyan */
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+  background-color: transparent !important; 
+  color: var(--color-tron-cyan) !important;
+  border: 1px solid var(--color-tron-cyan);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-family: var(--font-mono);
 }
 .future-mode .bg-slate-900:hover {
-  background-color: #0891b2 !important; /* cyan-600 */
-  box-shadow: 0 0 25px rgba(6, 182, 212, 0.6);
+  background-color: var(--color-tron-cyan) !important;
+  color: #000 !important;
+  box-shadow: 0 0 30px var(--color-tron-cyan);
 }
 
 /* Secondary Button/Interactive Elements */
 .future-mode .bg-white {
-  background-color: rgba(15, 23, 42, 0.8);
+  background-color: rgba(5, 5, 8, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #f8fafc;
 }
 .future-mode .hover\:bg-white:hover {
-  background-color: rgba(30, 41, 59, 0.9);
+  background-color: rgba(0, 243, 255, 0.1);
+  border-color: var(--color-tron-cyan);
 }
 
 /* Fix input fields */
 .future-mode input, 
 .future-mode textarea {
-  background-color: rgba(15, 23, 42, 0.6);
-  color: #f8fafc;
-  border-color: rgba(148, 163, 184, 0.2);
+  background-color: rgba(5, 5, 8, 0.8);
+  color: var(--color-tron-cyan);
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  font-family: var(--font-mono);
 }
 .future-mode input::placeholder,
 .future-mode textarea::placeholder {
-  color: #64748b;
+  color: rgba(0, 243, 255, 0.4);
 }
 
 /* Fix Emerald text colors to be brighter/neon in Future Mode */
-.future-mode .text-emerald-600 { color: #34d399 !important; text-shadow: 0 0 10px rgba(52, 211, 153, 0.3); }
-.future-mode .text-emerald-700 { color: #10b981 !important; }
-.future-mode .bg-emerald-100 { background-color: rgba(6, 95, 70, 0.4); }
-.future-mode .border-emerald-200 { border-color: rgba(16, 185, 129, 0.2); }
+.future-mode .text-emerald-600 { color: var(--color-tron-cyan) !important; text-shadow: 0 0 10px var(--color-tron-cyan); }
+.future-mode .text-emerald-700 { color: #fff !important; }
+.future-mode .bg-emerald-100 { 
+  background-color: rgba(0, 243, 255, 0.1); 
+  border: 1px solid var(--color-tron-cyan);
+}
+.future-mode .border-emerald-200 { border-color: var(--color-tron-cyan); }
 
 /* Fix Red error text colors for Future Mode */
-.future-mode .text-red-900 { color: #fca5a5 !important; } /* red-200 */
-.future-mode .text-red-700 { color: #f87171 !important; } /* red-300 */
-.future-mode .text-red-600 { color: #ef4444 !important; } /* red-500 - keep vibrant for icons */
-.future-mode .text-red-500 { color: #f87171 !important; } /* red-300 */
+.future-mode .text-red-900 { color: #ff003c !important; text-shadow: 0 0 10px rgba(255, 0, 60, 0.5); }
+.future-mode .text-red-700 { color: #ff4d73 !important; } 
+.future-mode .text-red-600 { color: #ff003c !important; text-shadow: 0 0 10px #ff003c; }
+.future-mode .text-red-500 { color: #ff003c !important; } 
+.future-mode .bg-red-50 { 
+  background-color: rgba(255, 0, 60, 0.1);
+  border-color: rgba(255, 0, 60, 0.3);
+}
 
 /* Fix Blue link colors for Future Mode */
-.future-mode .text-blue-600 { color: #60a5fa !important; text-shadow: 0 0 8px rgba(96, 165, 250, 0.3); }
-.future-mode .text-blue-800 { color: #3b82f6 !important; text-shadow: 0 0 8px rgba(59, 130, 246, 0.3); }
+.future-mode .text-blue-600 { color: var(--color-tron-blue) !important; text-shadow: 0 0 10px var(--color-tron-blue); }
+.future-mode .text-blue-800 { color: var(--color-tron-blue) !important; }
+
+/* Utility to hide scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

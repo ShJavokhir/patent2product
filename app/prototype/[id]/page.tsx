@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Patent } from '@/lib/types';
 import { MOCK_PATENTS } from '@/lib/constants';
+import { useFutureMode } from '@/lib/FutureModeContext';
 import { ArrowLeft, Sparkles, Loader2, CheckCircle2, Cpu, Zap, AlertCircle, FileText, ExternalLink, Eye, X, Download } from 'lucide-react';
 import Image from 'next/image';
 import GlassCard from '@/components/GlassCard';
@@ -48,6 +49,7 @@ export default function PrototypePage() {
   const params = useParams();
   const router = useRouter();
   const patentId = params.id as string;
+  const { isFutureMode } = useFutureMode();
 
   const [patent, setPatent] = useState<Patent | null>(null);
   const [status, setStatus] = useState<GenerationStatus>(GenerationStatus.IDLE);
@@ -61,6 +63,7 @@ export default function PrototypePage() {
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>('');
   const [additionalRequest, setAdditionalRequest] = useState<string>('');
   const [imageHistory, setImageHistory] = useState<string[]>([]);
+  const [selectedGeneratedImage, setSelectedGeneratedImage] = useState<number | null>(null);
 
   const steps: GenerationStep[] = [
     {
@@ -501,11 +504,15 @@ Product photography style, high detail, 8K resolution, photorealistic rendering.
               <div className="mb-5">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-lg font-bold text-slate-900">Generating...</h3>
-                  <span className="text-xl font-bold text-emerald-600">{progress}%</span>
+                  <span className={`text-xl font-bold ${isFutureMode ? 'text-cyan-400' : 'text-emerald-600'}`}>{progress}%</span>
                 </div>
-                <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div className={`w-full rounded-full h-2.5 overflow-hidden ${isFutureMode ? 'bg-slate-800 border border-cyan-900' : 'bg-slate-200'}`}>
                   <div
-                    className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 transition-all duration-300 ease-out"
+                    className={`h-full transition-all duration-300 ease-out ${
+                      isFutureMode 
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 shadow-[0_0_10px_rgba(0,243,255,0.5)]' 
+                        : 'bg-gradient-to-r from-emerald-400 to-teal-500'
+                    }`}
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -517,24 +524,24 @@ Product photography style, high detail, 8K resolution, photorealistic rendering.
                     key={step.status}
                     className={`flex items-start gap-3 p-3 rounded-lg transition-all ${
                       isStepActive(step.status)
-                        ? 'bg-emerald-50 border-2 border-emerald-200'
+                        ? isFutureMode ? 'bg-cyan-950/30 border-2 border-cyan-500/50 shadow-[0_0_15px_rgba(0,243,255,0.1)]' : 'bg-emerald-50 border-2 border-emerald-200'
                         : isStepComplete(step.status)
-                        ? 'bg-slate-50 border border-slate-200'
-                        : 'bg-white border border-slate-200 opacity-50'
+                        ? isFutureMode ? 'bg-slate-900/40 border border-cyan-500/20 opacity-70' : 'bg-slate-50 border border-slate-200'
+                        : isFutureMode ? 'bg-slate-900/20 border border-slate-800 opacity-30' : 'bg-white border border-slate-200 opacity-50'
                     }`}
                   >
                     <div className="flex-shrink-0 mt-0.5">
                       {isStepComplete(step.status) ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                        <CheckCircle2 className={`w-5 h-5 ${isFutureMode ? 'text-cyan-400' : 'text-emerald-600'}`} />
                       ) : isStepActive(step.status) ? (
-                        <Loader2 className="w-5 h-5 text-emerald-600 animate-spin" />
+                        <Loader2 className={`w-5 h-5 animate-spin ${isFutureMode ? 'text-cyan-400' : 'text-emerald-600'}`} />
                       ) : (
-                        <div className="w-5 h-5 rounded-full border-2 border-slate-300" />
+                        <div className={`w-5 h-5 rounded-full border-2 ${isFutureMode ? 'border-slate-700' : 'border-slate-300'}`} />
                       )}
                     </div>
                     <div className="flex-grow">
-                      <h4 className="text-sm font-bold text-slate-900 mb-0.5">{step.label}</h4>
-                      <p className="text-xs text-slate-600">{step.description}</p>
+                      <h4 className={`text-sm font-bold mb-0.5 ${isFutureMode ? 'text-cyan-100' : 'text-slate-900'}`}>{step.label}</h4>
+                      <p className={`text-xs ${isFutureMode ? 'text-cyan-200/60' : 'text-slate-600'}`}>{step.description}</p>
                     </div>
                   </div>
                 ))}
@@ -567,12 +574,18 @@ Product photography style, high detail, 8K resolution, photorealistic rendering.
                         Download
                       </a>
                     </div>
-                    <div className="rounded-lg overflow-hidden border-2 border-slate-200 shadow-lg">
+                    <div
+                      className="relative rounded-lg overflow-hidden border-2 border-slate-200 shadow-lg cursor-pointer group"
+                      onClick={() => setSelectedGeneratedImage(idx)}
+                    >
                       <img
                         src={imgUrl}
                         alt={`Prototype of ${patent.title} - Version ${idx + 1}`}
-                        className="w-full h-auto"
+                        className="w-full h-auto group-hover:scale-105 transition-transform duration-300"
                       />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                        <Eye className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -682,7 +695,7 @@ Product photography style, high detail, 8K resolution, photorealistic rendering.
         </div>
       </div>
 
-      {/* Image Modal */}
+      {/* Image Modal - Patent Figures */}
       {selectedImage !== null && patent.images && (
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
@@ -720,6 +733,66 @@ Product photography style, high detail, 8K resolution, photorealistic rendering.
                   <button
                     onClick={() => setSelectedImage(Math.min(patent.images!.length - 1, selectedImage + 1))}
                     disabled={selectedImage === patent.images.length - 1}
+                    className="px-4 py-2 text-sm bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Modal - Generated Images */}
+      {selectedGeneratedImage !== null && imageHistory.length > 0 && (
+        <div
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
+          onClick={() => setSelectedGeneratedImage(null)}
+        >
+          <div className="relative max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setSelectedGeneratedImage(null)}
+              className="absolute -top-12 right-0 w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
+            <div className="bg-white future-mode:bg-slate-800 rounded-xl p-4 shadow-2xl">
+              <div className="relative w-full h-[75vh] rounded-lg overflow-hidden bg-slate-100">
+                <img
+                  src={imageHistory[selectedGeneratedImage]}
+                  alt={`Prototype of ${patent.title} - Version ${selectedGeneratedImage + 1}`}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-slate-700">
+                    {selectedGeneratedImage === 0 ? 'Original Generation' : `Refinement ${selectedGeneratedImage}`}
+                  </p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Version {selectedGeneratedImage + 1} of {imageHistory.length}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <a
+                    href={imageHistory[selectedGeneratedImage]}
+                    download
+                    className="px-4 py-2 text-sm bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-all flex items-center gap-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download
+                  </a>
+                  <button
+                    onClick={() => setSelectedGeneratedImage(Math.max(0, selectedGeneratedImage - 1))}
+                    disabled={selectedGeneratedImage === 0}
+                    className="px-4 py-2 text-sm bg-slate-100 text-slate-900 font-bold rounded-lg hover:bg-slate-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => setSelectedGeneratedImage(Math.min(imageHistory.length - 1, selectedGeneratedImage + 1))}
+                    disabled={selectedGeneratedImage === imageHistory.length - 1}
                     className="px-4 py-2 text-sm bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next

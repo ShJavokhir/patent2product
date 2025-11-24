@@ -1,21 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
-import OpenAI from "openai";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import {
   createInputHash,
   getCacheEntry,
   setCacheEntry,
 } from "@/lib/cache";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 // Configure fal.ai
 fal.config({
   credentials: process.env.FAL_KEY,
-});
-
-// Configure OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Configure S3
@@ -29,6 +25,72 @@ const s3Client = new S3Client({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });
+
+const fluxPromptTemplate = (() => {
+  const templatePath = path.resolve(
+    process.cwd(),
+    "prompts/generate-designs.md"
+  );
+  try {
+    return readFileSync(templatePath, "utf8");
+  } catch (error) {
+    console.error(
+      `Failed to load flux prompt template at ${templatePath}`,
+      error
+    );
+    return "";
+  }
+})();
+
+type FluxPromptMeta = {
+  patent_url?: string;
+  patent_id?: string;
+  title?: string;
+  abstract?: string;
+  additionalUserRequest?: string;
+};
+
+function buildFluxPrompt(template: string, meta: FluxPromptMeta) {
+  if (!template) {
+    throw new Error("Flux prompt template is not available.");
+  }
+
+  const {
+    patent_url,
+    patent_id,
+    title,
+    abstract,
+    additionalUserRequest,
+  } = meta;
+
+  const sanitizedAbstract = abstract?.trim() || "No abstract provided.";
+  const sanitizedAdditional = additionalUserRequest?.trim();
+
+  let prompt = template
+    .replace(
+      "{image}",
+      "Use the uploaded patent drawing as the visual reference."
+    )
+    .replace("{patent_abstract}", sanitizedAbstract);
+
+  const details = [
+    title && `Title: ${title}`,
+    patent_id && `Patent ID: ${patent_id}`,
+    patent_url && `Patent URL: ${patent_url}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  if (details) {
+    prompt += `\n\nPATENT DETAILS:\n${details}`;
+  }
+
+  if (sanitizedAdditional) {
+    prompt += `\n\nADDITIONAL USER REQUEST:\n${sanitizedAdditional}`;
+  }
+
+  return prompt.trim();
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -82,77 +144,15 @@ export async function POST(req: NextRequest) {
     console.log(`[CACHE MISS] Processing new request for hash: ${inputHash}`);
 
     ////////////////////////////////////////////////////////////////////////////
-    // 1) Generate JSON prompt using OpenAI
+    // 1) Build Flux prompt
     ////////////////////////////////////////////////////////////////////////////
-    const systemPrompt = `
-You generate JSON prompts for photorealistic renderings of inventions.
-Return ONLY valid JSON. No commentary. No markdown.
-
-
-JSON structure:
-
-{
-  "scene": string,
-  "subjects": [
-    {
-      "description": string,
-      "pose": string,
-      "position": string,
-      "color_palette": string[]
-    }
-  ],
-  additionalUserRequest: string,
-  "style": string,
-  "color_palette": string[],
-  "lighting": string,
-  "mood": string,
-  "background": string,
-  "composition": string,
-  "camera": {
-    "angle": string,
-    "distance": string,
-    "focus": string,
-    "lens-mm": number,
-    "f-number": string,
-    "ISO": number
-  }
-}
-`;
-
-    const userPrompt = `
-Patent URL: ${patent_url}
-Patent ID: ${patent_id}
-
-Title:
-${title}
-
-Abstract:
-${abstract}
-
-Additional User Request: (optional)
-${additionalUserRequest}
-
-Generate a JSON prompt that renders this invention as a photorealistic product image based on the patent.
-`;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-5-nano-2025-08-07",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ],
-      // temperature: 0.7,
+    const fluxPrompt = buildFluxPrompt(fluxPromptTemplate, {
+      patent_url,
+      patent_id,
+      title,
+      abstract,
+      additionalUserRequest,
     });
-
-    const rawJSON = completion.choices[0].message.content ?? "{}";
-    let generatedPrompt;
-    try {
-      generatedPrompt = JSON.parse(rawJSON);
-    } catch {
-      generatedPrompt = { prompt_text: rawJSON };
-    }
-
-    const finalPrompt = JSON.stringify(generatedPrompt);
 
     ////////////////////////////////////////////////////////////////////////////
     // 2) Send to Fal "edit-image" model
@@ -164,7 +164,7 @@ Generate a JSON prompt that renders this invention as a photorealistic product i
     // Fal client will auto-upload local File objects
     const falResult = await fal.subscribe("fal-ai/alpha-image-232/edit-image", {
       input: {
-        prompt: finalPrompt,
+        prompt: fluxPrompt,
         image_size: "auto",
         output_format: "png",
         image_urls: [imageFile], // <— just send the File object
@@ -204,7 +204,7 @@ Generate a JSON prompt that renders this invention as a photorealistic product i
     const responseData = {
       success: true,
       patent: meta,
-      generatedPrompt,
+      generatedPrompt: fluxPrompt,
       falOutput: falResult.data,
       falRequestId: falResult.requestId,
       s3Url,

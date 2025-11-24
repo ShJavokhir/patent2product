@@ -3,10 +3,13 @@
 import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFutureMode } from '@/lib/FutureModeContext'
-import { Command, Sparkles, Moon, Sun } from 'lucide-react'
+import { Command, Sparkles, Moon, Sun, Image, Home } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 const COMMANDS = [
-  { id: 'future-mode', label: 'Future Mode', description: 'Explore patents for future products', icon: Sparkles },
+  { id: 'home', label: 'Home', description: 'Go to homepage', icon: Home, type: 'navigation' },
+  { id: 'gallery', label: 'Gallery', description: 'View all generated images', icon: Image, type: 'navigation' },
+  { id: 'future-mode', label: 'Future Mode', description: 'Explore patents for future products', icon: Sparkles, type: 'toggle' },
 ]
 
 export function CommandBar() {
@@ -15,6 +18,7 @@ export function CommandBar() {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const { isFutureMode, enterFutureMode, exitFutureMode } = useFutureMode()
+  const router = useRouter()
 
   // Filtered commands based on search
   const filteredCommands = COMMANDS.filter(cmd =>
@@ -71,7 +75,15 @@ export function CommandBar() {
   }, [search])
 
   const handleSelectCommand = (command: typeof COMMANDS[0]) => {
-    if (command.id === 'future-mode') {
+    if (command.type === 'navigation') {
+      if (command.id === 'home') {
+        router.push('/')
+      } else if (command.id === 'gallery') {
+        router.push('/gallery')
+      }
+      setIsOpen(false)
+      setSearch('')
+    } else if (command.id === 'future-mode') {
       if (isFutureMode) {
         exitFutureMode()
       } else {

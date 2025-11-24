@@ -186,4 +186,60 @@ export const MOCK_PATENTS = [
         pdf_local_path: "/assets/US11571938B2/pdf/patent.pdf",
         tags: ["VTOL", "Aviation", "Hybrid", "Jet Propulsion"]
     },
+    {
+        id: "p8",
+        patent_id: "US9305280B1",
+        page_url: "https://patents.google.com/patent/US9305280B1/en",
+        title: "Airborne fulfillment center utilizing unmanned aerial vehicles for item delivery",
+        pdf_url: "https://patentimages.storage.googleapis.com/7b/1e/4e/ed84f96a7c941b/US9305280.pdf",
+        abstract: "Described is an airborne fulfillment center (âAFCâ) and the use of unmanned aerial vehicles (âUAVâ) to deliver items from the AFC to users. For example, the AFC may be an airship that remains at a high altitude (e.g., 45,000 feet) and UAVs with ordered items may be deployed from the AFC to deliver ordered items to user designated delivery locations. As the UAVs descend, they can navigate horizontally toward a user specified delivery location using little to no power, other than to stabilize the UAV and/or guide the direction of descent. Shuttles (smaller airships) may be used to replenish the AFC with inventory, UAVs, supplies, fuel, etc. Likewise, the shuttles may be utilized to transport workers to and from the AFC.",
+        images: Array.from({ length: 27 }, (_, i) => ({
+            url: "",
+            local_path: `/assets/US9305280B1/pdf_images/page_${i + 1}.png`
+        })),
+        pdf_local_path: "/assets/US9305280B1/pdf/patent.pdf",
+        tags: ["Drones", "UAV", "Logistics", "Delivery", "Aviation"]
+    },
+    {
+        id: "p9",
+        patent_id: "US9480907B2",
+        page_url: "https://patents.google.com/patent/US9480907B2/",
+        title: "Immersive display with peripheral illusions",
+        pdf_url: "https://patentimages.storage.googleapis.com/0d/1c/97/130b048200ef25/US9480907.pdf",
+        abstract: "A primary display displays a primary image. A peripheral illusion is displayed around the primary display by an environmental display so that the peripheral illusion appears as an extension of the primary image.",
+        images: Array.from({ length: 22 }, (_, i) => ({
+            url: "",
+            local_path: `/assets/US9480907B2/pdf_images/page_${i + 1}.png`
+        })),
+        pdf_local_path: "/assets/US9480907B2/pdf/patent.pdf",
+        tags: ["Display", "Immersive Technology", "Visual Effects"]
+    },
+    {
+        id: "p10",
+        patent_id: "US20180116272A1",
+        page_url: "https://patents.google.com/patent/US20180116272A1/en",
+        title: "Methods and systems for 3d printing food items",
+        pdf_url: "https://patentimages.storage.googleapis.com/84/07/db/1a1209e1691485/US20180116272A1.pdf",
+        abstract: "Embodiments for 3D printing a food item by a processor are described. A request to 3D print a food item is received. Information associated with a consumer of the food item is received. The requested food item is 3D printed based on the information associated with the consumer of the food item.",
+        images: Array.from({ length: 14 }, (_, i) => ({
+            url: "",
+            local_path: `/assets/US20180116272A1/pdf_images/page_${i + 1}.png`
+        })),
+        pdf_local_path: "/assets/US20180116272A1/pdf/patent.pdf",
+        tags: ["3D Printing", "Food Technology", "Manufacturing"]
+    },
+    {
+        id: "p11",
+        patent_id: "US20120223885A1",
+        page_url: "https://patents.google.com/patent/US20120223885A1/",
+        title: "Immersive display experience",
+        pdf_url: "https://patentimages.storage.googleapis.com/05/8f/ab/f8e7f62ef265f1/US20120223885A1.pdf",
+        abstract: "A data-holding subsystem holding instructions executable by a logic subsystem is provided. The instructions are configured to output a primary image to a primary display for display by the primary display, and output a peripheral image to an environmental display for projection by the environmental display on an environmental surface of a display environment so that the peripheral image appears as an extension of the primary image.",
+        images: Array.from({ length: 12 }, (_, i) => ({
+            url: "",
+            local_path: `/assets/US20120223885A1/pdf_images/page_${i + 1}.png`
+        })),
+        pdf_local_path: "/assets/US20120223885A1/pdf/patent.pdf",
+        tags: ["Display", "Immersive Technology", "Projection"]
+    },
 ];
